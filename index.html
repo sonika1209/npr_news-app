@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+    <head>
+        <h1>National Public Radio</h1>
+        <br><br>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    </head>
+
+      <body>
+        <form>
+            <select name="topic_name" value= "{{ topic_name}}">
+            <option value="all things considered">All things considered</option>
+            <option value="news">News</option>
+            <option value="music">Music</option>
+            <option value="economy">Economy</option>
+            <option value="movies">Movies</option>
+            <option value="science">Science</option>
+            </select>
+           
+            <input type="submit" value="Load the topic">
+        </form>
+        <br><hr><br>
+        
+        <h3>Top 3 stories from <b>{{ topic_name }}</b> is : </h3>
+        <br><br>
+           
+            {% for story in json_obj['list']['story'] %}
+               
+               <b>TITLE:  </b>{{story['title']['$text'] + '\n' }}<br><br>
+               <b>DATE:</b> {{story['storyDate']['$text'] + '\n' }}<br><br>
+               <b>NPR URL:</b> {{story['link'][0]['$text'] + "\n" }}<br><br>
+   
+
+               {% if 'teaser'in story: %}
+                    <b>TEASER:</b> {{story['teaser']['$text'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'byline' in story: %}
+                    <b>BYLINE:</b> {{story['byline'][0]['name']['$text'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'show' in story: %}
+                    <b>PROGRAM:</b> {{story['show'][0]['program']['$text'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'image' in story: %}
+                    <b>IMAGE:</b> {{story['image'][0]['src'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'caption' in story: %}
+                    <b>IMAGE CAPTION:</b> {{story['image'][0]['caption']['$text'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'producer' in story: %}
+                    <b>IMAGE CREDIT:</b> {{story['image'][0]['producer']['$text'] + "\n"}}<br><br>
+               {% endif %}
+               
+               {% if 'textWithHtml' in story: %}
+                   {% for paragraph in story['textWithHtml']['paragraph']: %}
+                        {{ paragraph['$text'].encode('ascii', 'replace') + " \n" }}<br>
+                   {% endfor %}
+               {% endif %}<br><hr><br><br>
+           
+            {% endfor %}
+        
+       
+
+      </body>
+</html>
+{% endautoescape %}
